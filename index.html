@@ -1,12 +1,214 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Zap-Portail</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZAP Portail — Ouvrez votre portail depuis votre téléphone</title>
+<meta name="description" content="Pilotez votre portail existant depuis votre téléphone, où que vous soyez. Installation sur votre motorisation actuelle, sans abonnement. Rémi Royer, installateur.">
+
+<meta property="og:title" content="ZAP Portail">
+<meta property="og:description" content="Ouvrez votre portail depuis votre téléphone, où que vous soyez.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --nuit:#08213D; --bleu:#2E86DE; --bleu-fonce:#1C63A8; --or:#A9761F;
+    --or-pale:#FDF4E0; --papier:#F2F5F8; --encre:#1B2733; --gris:#5B6B85;
+    --trait:#DCE3EC; --vert:#1F8A5A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#fff;color:var(--encre);
+    font-family:'Public Sans',system-ui,sans-serif;font-size:17px;line-height:1.65;
+    -webkit-font-smoothing:antialiased}
+
+  .barreaux{height:10px;
+    background:repeating-linear-gradient(90deg,var(--nuit) 0 4px,transparent 4px 14px)}
+
+  .page{max-width:920px;margin:0 auto;padding:0 24px}
+
+  /* ---------- En-tête ---------- */
+  header{padding:30px 0 0;display:flex;align-items:center;justify-content:space-between;
+    flex-wrap:wrap;gap:12px}
+  .marque{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;
+    font-size:27px;color:var(--nuit);letter-spacing:-.02em}
+  header .tel{font-weight:700;color:var(--bleu-fonce);text-decoration:none;font-size:17px}
+
+  /* ---------- Bandeau principal ---------- */
+  .heros{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;
+    align-items:center;padding:56px 0 64px}
+  @media (max-width:760px){.heros{grid-template-columns:1fr;gap:26px;padding:36px 0 44px;text-align:center}}
+
+  h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;
+    font-size:clamp(34px,6.4vw,50px);line-height:1.06;color:var(--nuit);letter-spacing:-.02em}
+  .chapeau{font-size:19px;color:var(--gris);margin-top:18px;max-width:34ch}
+  @media (max-width:760px){.chapeau{margin-left:auto;margin-right:auto}}
+
+  .actions{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+  @media (max-width:760px){.actions{justify-content:center}}
+  .btn{display:inline-block;text-decoration:none;font-weight:700;font-size:16.5px;
+    padding:16px 26px;border-radius:13px;transition:background .15s ease}
+  .btn-plein{background:var(--bleu);color:#fff;box-shadow:0 6px 20px rgba(46,134,222,.26)}
+  .btn-plein:hover{background:var(--bleu-fonce)}
+  .btn-vide{background:#fff;color:var(--nuit);border:2px solid var(--nuit)}
+  .btn-vide:hover{background:var(--papier)}
+  .btn:focus-visible{outline:3px solid var(--or);outline-offset:3px}
+
+  .visuel{text-align:center}
+  .visuel img{width:100%;max-width:250px;height:auto}
+
+  /* ---------- Arguments ---------- */
+  .section{padding:56px 0;border-top:1px solid var(--trait)}
+  h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;
+    font-size:clamp(24px,4.4vw,31px);color:var(--nuit);margin-bottom:8px}
+  .sous{color:var(--gris);margin-bottom:34px;max-width:56ch}
+
+  .grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px}
+  .carte h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;
+    font-size:18.5px;color:var(--nuit);margin-bottom:7px;
+    padding-left:14px;border-left:4px solid var(--bleu)}
+  .carte p{color:var(--gris);font-size:16px;padding-left:18px}
+  .carte.vert h3{border-left-color:var(--vert)}
+  .carte.or h3{border-left-color:var(--or)}
+
+  /* ---------- Fonctions ---------- */
+  .liste{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px 30px}
+  .liste div{padding-left:20px;position:relative;color:var(--gris);font-size:16px}
+  .liste div::before{content:'';position:absolute;left:0;top:11px;
+    width:7px;height:7px;border-radius:2px;background:var(--bleu)}
+
+  /* ---------- Encart sans abonnement ---------- */
+  .encart{background:var(--or-pale);border-left:5px solid var(--or);
+    border-radius:0 14px 14px 0;padding:24px 26px;margin-top:34px}
+  .encart h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;
+    font-size:19px;color:var(--or);margin-bottom:6px}
+  .encart p{color:#7A5D22;font-size:16px}
+
+  /* ---------- Contact ---------- */
+  .contact{background:var(--nuit);color:#fff;border-radius:20px;
+    padding:44px 30px;text-align:center;margin:56px 0}
+  .contact h2{color:#fff;margin-bottom:6px}
+  .contact .devis{color:#B9D2EC;margin-bottom:26px}
+  .contact a.num{display:inline-block;color:#fff;text-decoration:none;
+    font-family:'Bricolage Grotesque',sans-serif;font-weight:800;
+    font-size:clamp(30px,7vw,40px);padding:6px 14px;border-radius:10px;letter-spacing:.01em}
+  .contact a.num:focus-visible{outline:3px solid var(--bleu);outline-offset:2px}
+  .contact .mail{color:#B9D2EC;margin-top:12px}
+  .contact .horaires{color:#8FAFCF;font-size:15px;margin-top:8px}
+
+  footer{border-top:1px solid var(--trait);padding:26px 0 50px;
+    color:var(--gris);font-size:15px;display:flex;justify-content:space-between;
+    flex-wrap:wrap;gap:10px}
+  footer a{color:var(--gris)}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
 <body>
-  <h1>Zap-Portail</h1>
-  <p>Zap-Portail est une association proposant des services numériques.</p>
-  <p>Contact : zapportail@gmail.com</p>
+
+<div class="barreaux" aria-hidden="true"></div>
+
+<div class="page">
+
+  <header>
+    <div class="marque">ZAP&nbsp;Portail</div>
+    <a class="tel" href="tel:+33782141780">07 82 14 17 80</a>
+  </header>
+
+  <section class="heros">
+    <div>
+      <h1>Votre portail s'ouvre depuis votre téléphone.</h1>
+      <p class="chapeau">
+        Nous équipons votre motorisation existante. Vos télécommandes continuent
+        de fonctionner : nous ajoutons une possibilité, nous n'en retirons aucune.
+      </p>
+      <div class="actions">
+        <a class="btn btn-plein" href="tel:+33782141780">Demander un devis</a>
+        <a class="btn btn-vide" href="installation.html">Installer l'application</a>
+      </div>
+    </div>
+    <div class="visuel">
+      <img src="apercu-application.png" alt="L'application ZAP Portail affichant l'état du portail et le bouton d'ouverture">
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Ce que ça change au quotidien</h2>
+    <p class="sous">
+      Quatre situations que vous connaissez, et qui cessent d'en être.
+    </p>
+
+    <div class="grille">
+      <div class="carte">
+        <h3>Plus jamais bloqué dehors</h3>
+        <p>Télécommande oubliée, pile morte, télécommande perdue : votre téléphone suffit. Il est toujours dans votre poche.</p>
+      </div>
+      <div class="carte">
+        <h3>Ouvrir même en vacances</h3>
+        <p>Le livreur, la femme de ménage, un proche qui vient arroser : vous ouvrez de n'importe où, sans confier de clé.</p>
+      </div>
+      <div class="carte vert">
+        <h3>Savoir s'il est bien fermé</h3>
+        <p>Si votre motorisation le permet, l'application affiche l'état réel. Plus besoin de faire demi-tour pour vérifier.</p>
+      </div>
+      <div class="carte vert">
+        <h3>Voir qui est passé</h3>
+        <p>Chaque ouverture est enregistrée avec le nom et l'heure. Vous savez quand vos enfants sont rentrés.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Toutes les fonctions</h2>
+    <p class="sous">
+      L'application s'adapte à votre installation : portail coulissant, battant ou
+      porte de garage, avec ou sans éclairage extérieur.
+    </p>
+
+    <div class="liste">
+      <div>Ouverture depuis n'importe où dans le monde</div>
+      <div>Accès famille sans adresse e-mail</div>
+      <div>Ouverture piétonne séparée</div>
+      <div>Retrait d'un accès immédiat</div>
+      <div>Éclairage extérieur temporisé</div>
+      <div>Plusieurs portails sur un même téléphone</div>
+      <div>État du portail en temps réel</div>
+      <div>Télécommandes radio gérées depuis l'application</div>
+      <div>Historique des passages</div>
+      <div>Indicateur de bon fonctionnement du boîtier</div>
+      <div>Notification quand quelqu'un ouvre</div>
+      <div>Assistance de votre installateur à distance</div>
+    </div>
+
+    <div class="encart">
+      <h3>Sans abonnement</h3>
+      <p>
+        Vous payez l'installation, et c'est tout. Aucun abonnement mensuel, aucun
+        service à renouveler. Si votre portail est trop éloigné de votre box
+        internet, une solution longue portée existe : parlons-en lors de la visite.
+      </p>
+    </div>
+  </section>
+
+  <section class="contact">
+    <h2>Parlons de votre projet</h2>
+    <p class="devis">Devis et visite sur place gratuits</p>
+    <a class="num" href="tel:+33782141780">07 82 14 17 80</a>
+    <p class="mail"><a href="mailto:zapportail@gmail.com" style="color:#B9D2EC">zapportail@gmail.com</a></p>
+    <p class="horaires">Rémi Royer · du lundi au vendredi, 8h00 – 19h00</p>
+  </section>
+
+  <footer>
+    <div>ZAP Portail — Rémi Royer</div>
+    <div>
+      <a href="installation.html">Installer l'application</a> ·
+      <a href="confidentialite.html">Politique de confidentialité</a>
+    </div>
+  </footer>
+
+</div>
 </body>
 </html>
